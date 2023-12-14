@@ -1,9 +1,13 @@
 
 def eh_territorio(territorio):
-    """eh territorio(t) recebe um argumento de qualquer tipo e devolve True se o seu argu-
+    """A função recebe um territorio e devolve True ou False, dependendo se o territorio é possivel ou não
+    
+    eh territorio(t) recebe um argumento de qualquer tipo e devolve True se o seu argu-
     mento corresponde a um território e False caso contrário, sem nunca gerar erros. Nesta
     parte do projeto, considere que um território corresponde a um tuplo de tuplos como
-    descrito, e que o território contêm no minimo 1 caminho vertical e 1 caminho horizontal."""
+    descrito, e que o território contêm no minimo 1 caminho vertical e 1 caminho horizontal.
+    eh_territorio(territorio):{universal}-->{booleano}
+    """
     if not isinstance(territorio, tuple):
         return False
     if not (26>=len(territorio)>=1): #verifica se o tuplo esta compreendido entre 1-26 ou seja A-Z,
@@ -24,28 +28,30 @@ def eh_territorio(territorio):
     return True
     
 def obtem_ultima_intersecao(t):
-    """obtem ultima intersecao(t) recebe um território e devolve a intersecao do extremo supe-
-    rior direito do território."""
-    return (chr(len(t) + ord('A')-1),len(t[0])) 
+    """A função recebe um territorio e fornece um tuplo no qual contem informação sobre a ultima linha e coluna
+    
+    obtem ultima intersecao(t) recebe um território e devolve a intersecao do extremo supe-
+    rior direito do território.{territorio}-->{interseção}
+    """
+    return (chr(len(t) + ord('A')-1),len(t[0])) #como um territorio necessita ter pelo menos a letra A adicionamos o numero de subtuplos -1 para que retorne a ultima letra
 
     
 
 
 def eh_intersecao(arg):#feita
-    """eh intersecao(arg) recebe um argumento de qualquer tipo e devolve True se o seu ar
+    """A função recebe uma interseção, e é verificado se o argumento forncido cumpre os requisitos para ser uma interseção
+
+    eh intersecao(arg) recebe um argumento de qualquer tipo e devolve True se o seu ar
     gumento corresponde a uma interseção e False caso contrário, sem nunca gerar erros.
     Nesta parte do projeto, considere que uma interseção corresponde a um tuplo como
-    descrito."""
+    descrito.{universal}-->{booleano}
+    """
     if type(arg)!=tuple or len(arg)!=2:#vai avaliar se argumento fornecido é um tuplo e se não é fornecido + ou menos que dois parametros
         return False
-    if not isinstance(arg[1], int):#avalia se o segundo elemento corresponde a um inteiro
+    if not isinstance(arg[1], int) or not isinstance(arg[0], str):#avalia se o segundo elemento corresponde a um inteiro
         return False
-    if not isinstance(arg[0], str):#avalia 
+    if len(arg[0])!=1 or not(ord('A')<=ord(arg[0])<=ord('Z')):#cria um intervalo, onde verifica se a letra esta comprendida entre o minimo e maximo possivel
         return False
-    if len(arg[0])!=1:
-        return False
-    if not(ord('A')<=ord(arg[0])<=ord('Z')):
-        return False   
     if 1>arg[1] or arg[1]>99:
         return False
     else:
@@ -56,8 +62,11 @@ def eh_intersecao(arg):#feita
 
 
 def eh_intersecao_valida(t,i):#feita
-    """eh intersecao valida(t, i) recebe um território e uma interseção, e devolve True se a
-    interseção corresponde a uma interseção do território, e False caso contrário."""
+    """A função recebe 2 argumentos, o territorio e a interseção, pela mesma ordem, e verifica se a interseção esta contida ou não nos parametros do territorio
+
+    eh intersecao valida(t, i) recebe um território e uma interseção, e devolve True se a
+    interseção corresponde a uma interseção do território, e False caso contrário.{territorio}X{intersecao}-->{interseção}
+    """
     if not ord('A')<=ord(i[0])<=ord('A')+len(t)-1:#avalia se a letra esta entre 1 e o numero total de subtuplos do territorio
         return False
     elif not 1<=i[1]<=len(t[0]):#avalia se o numero fornecido está dentro dos parametros do terriorio
@@ -66,10 +75,12 @@ def eh_intersecao_valida(t,i):#feita
         return True  
 
 def eh_intersecao_livre(t,i):#feita
-    """
+    """A função recebe dois argumento, o territorio e a interseção e vai devolver, vai avaliar se a interseção no territorio devolve valro 1 ou 0, caso seja 1 devolve false e 0 devolve true
+
     eh intersecao livre(t, i) recebe um território e uma interseção do território, e devolve
     True se a interseção corresponde a uma interseção livre (não ocupada por montanhas)
-    dentro do território e False caso contrário."""
+    dentro do território e False caso contrário.{territorio}X{intersecao}-->{booleano}
+    """
     subtuplo= ord(i[0])-ord('A') 
     numero=i[1]-1 #i[1] começa a partir de 1, logo retiramos 1 para que possa contar o termo nº0
     if t[subtuplo][numero] == 1:#caso seja igual a 1 é uma montanha
@@ -78,9 +89,13 @@ def eh_intersecao_livre(t,i):#feita
         return True
 
 def obtem_intersecoes_adjacentes(t,i):#feita 
-    """obtem intersecoes adjacentes(t, i) recebe um território e uma interseção do território, e
+    """A função recebe dois argumento, o territorio e a interseção e vai devolver, as interseções adjacentes á fornecida, ou seja o termo em cima, em baixo, à esquerda
+    e á direita
+
+    obtem intersecoes adjacentes(t, i) recebe um território e uma interseção do território, e
     devolve o tuplo formado pelas interseções válidas adjacentes da interseção em ordem de
-    leitura de um território."""
+    leitura de um território.{territorio}X{intersecao}-->{tuplo}
+    """
     if type(t)!=tuple or type(i)!=tuple:
         raise ValueError("Não foram fornecidos tuplos corretos")
     
@@ -101,18 +116,24 @@ def obtem_intersecoes_adjacentes(t,i):#feita
         
 
 def ordena_intersecoes (arg):#feito
-    """ordena intersecoes(tup) recebe um tuplo de interseções (potencialmente vazio) e devolve
+    """A função vai receber um argumento(tuplo) e vai organizar as diferentes interseções pela linha que se encontra, caso exista alguma com a mesma linha sera avaliada a coluna
+
+    ordena_intersecoes(tup) recebe um tuplo de interseções (potencialmente vazio) e devolve
     um tuplo contendo as mesmas interseções ordenadas de acordo com a ordem de leitura
-    do território."""
+    do território.{tuplo}-->{tuplo}
+    """
     return tuple(sorted(arg, key= lambda x:(x[1],x[0])))
         
 
 
 def territorio_para_str (territorio):#feita 
-    """territorio para str(t) recebe um território e devolve a cadeia de caracteres que o repre-
+    """A função recebe um territorio e vai devolver uma string com o territorio formatado
+
+    territorio_para_str(territorio) recebe um território e devolve a cadeia de caracteres que o repre-
     senta (a representação externa ou representação “para os nossos olhos”), de acordo com
     o exemplo na seguinte interação. Se o argumento dado for inválido, a função deve gerar
-    um erro com a mensagem 'territorio_para_str: argumento invalido'."""
+    um erro com a mensagem 'territorio_para_str: argumento invalido'.{territorio}-->{string}
+    """
     
     letras=[]#lista com as letras do terriorio
     numeros=[]#lista com os numeros do territorio
@@ -146,23 +167,25 @@ def territorio_para_str (territorio):#feita
 
 
 def obtem_cadeia (t,i):#feito
-    """obtem cadeia(t,i) recebe um território e uma interseção do território (ocupada por uma
+    """A função recebe um territorio e uma interseção, podendo ser montanha ou vazia, e vai fornecer todas as interseções do mesmo tipo adjacentes
+
+    obtem_cadeia(t,i) recebe um território e uma interseção do território (ocupada por uma
     montanha ou livre), e devolve o tuplo formado por todas as interseções que estão cone-
     tadas a essa interseção ordenadas (incluida si própria) de acordo com a ordem de leitura
     de um território. Se algum dos argumentos dado for inválido, a função deve gerar um
-    erro com a mensagem 'obtem_cadeia: argumentos invalidos'.
+    erro com a mensagem 'obtem_cadeia: argumentos invalidos'.{territorio}X{intersecao}-->{tuplo}
     """
-    if not (eh_territorio(t) and eh_intersecao(i) and eh_intersecao_valida(t,i)):
+    if  not eh_territorio(t) or not eh_intersecao(i) or not eh_intersecao_valida(t,i):
         raise ValueError('obtem_cadeia: argumentos invalidos')
     
     listav=[i]
     indice=0
-    candidatos= obtem_intersecoes_adjacentes(t,listav[indice])#vai devolver lista com os tuplos
+    candidatos= obtem_intersecoes_adjacentes(t,listav[indice])#vai devolver lista com os tuplos que por estarem adjacentes podem ser ou não ser
 
     while candidatos:
         for um in candidatos:
             if um not in listav:
-                if eh_intersecao_livre(t,um)==eh_intersecao_livre(t,i) :
+                if eh_intersecao_livre(t,um)==eh_intersecao_livre(t,i) :#vai verificar se o candidato esta ou não está, e se é vazio ou não
                  listav+=[um]
         indice+=1
         if indice==len(listav):
@@ -171,12 +194,16 @@ def obtem_cadeia (t,i):#feito
 
 
 
+
 def obtem_vale(t,i):#rever
-    """obtem vale(t,i) recebe um território e uma interseção do território ocupada por uma mon-
+    """A função recebe como argumentos uma interseção e um territorio, e caso seja montanha ira fornecer as interseções vazias a sua volta
+
+    obtem_vale(t,i) recebe um território e uma interseção do território ocupada por uma mon-
     tanha, e devolve o tuplo (potencialmente vazio) formado por todas as interseções que for-
     mam parte do vale da montanha da interseção fornecida como argumento ordenadas de
     acordo à ordem de leitura de um território. Se algum dos argumentos dado for inválido,
-    a função deve gerar um erro com a mensagem 'obtem_vale: argumentos invalidos'."""
+    a função deve gerar um erro com a mensagem 'obtem_vale: argumentos invalidos'.{territorio}X{intersecao}-->{tuplo}
+    """
 
     list=[]
 
@@ -199,12 +226,15 @@ def obtem_vale(t,i):#rever
 
 
 def verifica_conexao(t,i1,i2):#rever(deve estar bem)
-    """verifica_conexao(t,i1,i2) recebe um território e duas interseções do território e devolve
+    """A função recebe duas interseções e um territorio e vai verificar se as duas interseções se encontram ou não na mesma cadeia
+
+    verifica_conexao(t,i1,i2) recebe um território e duas interseções do território e devolve
     True se as duas interseções estão conetadas e False caso contrário. Se algum dos
     argumentos dado for inválido, a função deve gerar um erro com a mensagem
-    'verifica_conexao: argumentos invalidos'."""
+    'verifica_conexao: argumentos invalidos'.{territorio}X{intersecao}X{intersecao}-->{booleano}
+    """
     try:
-        if not(eh_territorio(t) and eh_intersecao_valida(t,i1) and eh_intersecao_valida(t,i2)):
+        if not (eh_territorio(t) and eh_intersecao_valida(t,i1) and eh_intersecao_valida(t,i2)):
             raise ValueError('verifica_conexao: argumentos invalidos')
         if obtem_cadeia(t,i1)==obtem_cadeia(t,i2):#possivelmente o erro é derivado ao obtem_cadeia
             return True
@@ -214,9 +244,12 @@ def verifica_conexao(t,i1,i2):#rever(deve estar bem)
     
 
 def calcula_numero_montanhas(t):#feito
-    """calcula_numero_montanhas(t) recebe um território e devolve o número de interseções
+    """Vai receber um territorio, e vai devolver quantas interseções nao livres se encontram presentes
+
+    calcula_numero_montanhas(t) recebe um território e devolve o número de interseções
     ocupadas por montanhas no território. Se o argumento dado for inválido, a função deve
-    gerar um erro com a mensagem 'calcula_numero_montanhas: argumento invalido'."""
+    gerar um erro com a mensagem 'calcula_numero_montanhas: argumento invalido'.{territorio}-->{int}
+    """
 
     soma=0
 
@@ -230,9 +263,12 @@ def calcula_numero_montanhas(t):#feito
 
 
 def calcula_numero_cadeias_montanhas(t):#rever
-    """calcula numero cadeias montanhas(t) recebe um território e devolve o número de cadeias
+    """recebe um territorio, e devovle quantas cadeias de montanhas existem no territorio
+
+    calcula_numero_cadeias montanhas(t) recebe um território e devolve o número de cadeias
     de montanhas contidas no território. Se o argumento dado for inválido, a função deve ge-
-    rar um erro com a mensagem 'calcula_numero_cadeias_montanhas: argumento invalido'."""
+    rar um erro com a mensagem 'calcula_numero_cadeias_montanhas: argumento invalido'.{territorio}-->{int}
+    """
     try:
         if not eh_territorio(t):
             raise ValueError('calcula_numero_cadeias_montanhas: argumento invalido')
@@ -262,11 +298,15 @@ def calcula_numero_cadeias_montanhas(t):#rever
         
 
 def calcula_tamanho_vales(t):
-    """calcula tamanho vales(t) recebe um território e devolve o número total de interseções
+    """recebe um territorio e determina o numero total de interseções livres que estão adjacentes a interseções ocupadas
+
+    recebe um território e devolve o número total de interseções
     diferentes que formam todos os vales do território. Por exemplo, na Figura 1c) o ta-
     manho dos vales é de 6 interseções, marcadas com pontos amarelos, verdes e verde-
     amarelos. Se o argumento dado for inválido, a função deve gerar um erro com a mensa-
-    gem 'calcula_tamanho_vales: argumento invalido'."""
+    gem 'calcula_tamanho_vales: argumento invalido'.
+    calcula_tamanho_vales(t){territorio}-->{int}
+    """
     if not eh_territorio(t):
         raise ValueError('calcula_tamanho_vales: argumento invalido')
 
